@@ -88,13 +88,12 @@ function EasterEggModal({ person, onClose }) {
           </div>
         </div>
 
-        {/* Fun message */}
         <div className="mt-4 text-center space-y-1">
           <p className="font-serif italic text-stone-300 text-sm">
             "The man who codes also lifts. Who knew? 🏋️"
           </p>
           <p className="font-sans text-[10px] text-stone-600 uppercase tracking-widest">
-            Double-tap his card again to reopen · Press Esc to close
+            Click his card again to reopen · Press Esc to close
           </p>
         </div>
 
@@ -217,30 +216,16 @@ function shareCard(person, displayPhoto) {
 
 // ─── Person Card ──────────────────────────────────────────────────────────────
 function PersonCard({ person }) {
-  // For Rakesh: randomly pick normal OR one of the egg photos on every page load
-  const displayPhoto = useMemo(() => {
-    if (!person.easterEgg) return person.photo;
-    
-    // 90% chance to show the normal photo
-    if (Math.random() > 0.1) {
-      return person.photo;
-    }
-    
-    // 10% chance to show a random easter egg photo
-    const pool = person.easterEggPhotos;
-    return pool[Math.floor(Math.random() * pool.length)];
-  }, [person]);
+  const [imgSrc, setImgSrc] = useState(person.photo);
 
-  const [imgSrc, setImgSrc] = useState(displayPhoto);
-
-  // Fallback if egg image doesn't exist yet
+  // Fallback if image doesn't exist
   const handleImgError = () => {
     if (imgSrc !== person.photo) setImgSrc(person.photo);
   };
 
   const [eggOpen, setEggOpen] = useState(false);
 
-  const handleDoubleClick = () => {
+  const handleClick = () => {
     if (person.easterEgg) setEggOpen(true);
   };
 
@@ -251,9 +236,9 @@ function PersonCard({ person }) {
       >
         {/* Photo */}
         <div
-          className={`aspect-[4/5] overflow-hidden relative ${person.easterEgg ? "cursor-zoom-in" : ""}`}
-          onDoubleClick={handleDoubleClick}
-          title={person.easterEgg ? "Double-click for a surprise 🥚" : undefined}
+          className={`aspect-[4/5] overflow-hidden relative ${person.easterEgg ? "cursor-pointer" : ""}`}
+          onClick={handleClick}
+          title={person.easterEgg ? "Click for a surprise 🥚" : undefined}
         >
           <img
             className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
@@ -280,7 +265,7 @@ function PersonCard({ person }) {
           {/* Easter egg hint — very subtle egg icon, hidden until hover */}
           {person.easterEgg && (
             <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-60 transition-opacity duration-500">
-              <span className="text-lg select-none" title="Double-click me!">🥚</span>
+              <span className="text-lg select-none" title="Click me!">🥚</span>
             </div>
           )}
         </div>
