@@ -569,30 +569,30 @@ export default function Classroom() {
 
       {/* ── Loading screen ───────────────────────────────────────────────── */}
       {loading && (
-        <div className="absolute inset-0 bg-black flex flex-col items-center justify-center z-50 gap-6">
+        <div className="absolute inset-0 bg-background flex flex-col items-center justify-center z-50 gap-6">
           <div className="relative w-28 h-28">
             {/* outer ring */}
             <svg className="w-full h-full animate-spin" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="44" fill="none" stroke="#1a1a2e" strokeWidth="8" />
-              <circle cx="50" cy="50" r="44" fill="none" stroke="#f2ca50" strokeWidth="8"
+              <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
+              <circle cx="50" cy="50" r="44" fill="none" stroke="#06B6D4" strokeWidth="8"
                 strokeLinecap="round"
                 strokeDasharray="276"
                 strokeDashoffset={276 - (276 * loadProgress) / 100}
                 style={{ transition: 'stroke-dashoffset 0.3s ease', transform: 'rotate(-90deg)', transformOrigin: 'center' }}
               />
             </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-yellow-400 font-bold text-xl">
+            <span className="absolute inset-0 flex items-center justify-center text-accent-cyan font-bold text-xl">
               {loadProgress}%
             </span>
           </div>
           <div className="text-center space-y-2">
-            <p className="text-yellow-400 font-serif italic text-3xl tracking-wide">Classroom Explorer</p>
-            <p className="text-stone-400 text-sm tracking-widest uppercase">Loading classroom…</p>
+            <p className="font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-cyan text-3xl tracking-wide">Classroom Explorer</p>
+            <p className="text-on-surface-variant text-sm tracking-widest uppercase font-sans">Loading classroom…</p>
           </div>
           {/* bar */}
-          <div className="w-72 h-1 bg-stone-800 rounded-full overflow-hidden">
+          <div className="w-72 h-1 bg-white/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-yellow-600 to-yellow-300 rounded-full transition-all duration-300"
+              className="h-full bg-gradient-to-r from-primary via-accent-rose to-accent-cyan rounded-full transition-all duration-300"
               style={{ width: `${loadProgress}%` }}
             />
           </div>
@@ -602,26 +602,26 @@ export default function Classroom() {
       {/* ── Desktop Click-to-enter overlay (when not locked and not touch) ─────────────────────── */}
       {!loading && !locked && !isTouchDevice && (
         <div
-          className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-8"
-          style={{ background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.82) 100%)' }}
+          className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-8 backdrop-blur-sm"
+          style={{ background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.15) 0%, rgba(10,10,10,0.85) 100%)' }}
         >
           {/* title */}
           <div className="text-center space-y-2">
-            <p className="text-yellow-400 font-serif italic text-5xl md:text-6xl tracking-wide drop-shadow-lg">
+            <p className="font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent-rose to-accent-cyan text-5xl md:text-6xl tracking-wide drop-shadow-lg">
               Class Explorer
             </p>
-            <p className="text-stone-300 text-base tracking-widest uppercase">Farewell 2026 · Interactive 3D</p>
+            <p className="text-on-surface-variant text-base tracking-widest uppercase font-sans font-medium">Farewell 2026 · Interactive 3D</p>
           </div>
 
           {/* enter button */}
           <button
             onClick={enterExplore}
-            className="group relative overflow-hidden px-12 py-4 rounded-xl border border-yellow-500/40
-                       bg-yellow-500/10 hover:bg-yellow-500/20 transition-all duration-300
-                       text-yellow-300 font-bold uppercase tracking-widest text-sm cursor-pointer"
+            className="group relative overflow-hidden px-12 py-4 rounded-2xl border border-white/10
+                       bg-white/5 hover:bg-white/10 transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.2)]
+                       text-white font-sans font-bold uppercase tracking-widest text-sm cursor-pointer glass-card bouncy-hover"
           >
             <span className="relative z-10 flex items-center gap-3">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+              <span className="material-symbols-outlined text-[20px] text-primary">view_in_ar</span>
               Enter Classroom
             </span>
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700
@@ -654,10 +654,10 @@ export default function Classroom() {
           
           {/* Top Bar Hints */}
           <div className="flex justify-between p-6 opacity-70">
-            <div className="text-yellow-300/80 text-xs tracking-widest uppercase bg-black/40 px-3 py-1.5 rounded-full backdrop-blur-md border border-yellow-500/20">
+            <div className="text-accent-cyan text-[10px] font-bold tracking-widest uppercase bg-white/5 px-4 py-2 rounded-full backdrop-blur-xl border border-white/10 glass-card">
               Drag left side to move
             </div>
-            <div className="text-yellow-300/80 text-xs tracking-widest uppercase bg-black/40 px-3 py-1.5 rounded-full backdrop-blur-md border border-yellow-500/20">
+            <div className="text-accent-cyan text-[10px] font-bold tracking-widest uppercase bg-white/5 px-4 py-2 rounded-full backdrop-blur-xl border border-white/10 glass-card">
               Drag right side to look
             </div>
           </div>
@@ -665,11 +665,11 @@ export default function Classroom() {
           {/* Virtual Joystick UI (Rendered where thumb is) */}
           {joystickUI.active && (
             <div 
-              className="absolute w-24 h-24 border-2 border-yellow-400/30 bg-black/20 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none backdrop-blur-sm"
+              className="absolute w-24 h-24 border border-white/20 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none backdrop-blur-md"
               style={{ left: joystickUI.origin.x, top: joystickUI.origin.y }}
             >
               <div 
-                className="absolute w-10 h-10 bg-yellow-400/60 rounded-full shadow-[0_0_15px_rgba(242,202,80,0.5)] -translate-x-1/2 -translate-y-1/2"
+                className="absolute w-10 h-10 bg-gradient-to-br from-primary to-accent-cyan rounded-full shadow-[0_0_15px_rgba(6,182,212,0.5)] -translate-x-1/2 -translate-y-1/2"
                 style={{ 
                   left: 48 + (joystickUI.current.x - joystickUI.origin.x), 
                   top: 48 + (joystickUI.current.y - joystickUI.origin.y) 
@@ -679,7 +679,7 @@ export default function Classroom() {
           )}
 
           {/* Crosshair */}
-          <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-yellow-400/60 rounded-full -translate-x-1/2 -translate-y-1/2 shadow-[0_0_8px_rgba(242,202,80,0.8)]" />
+          <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-accent-cyan rounded-full -translate-x-1/2 -translate-y-1/2 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
         </div>
       )}
 
@@ -689,45 +689,46 @@ export default function Classroom() {
           {/* crosshair */}
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-30">
             <div className="relative w-6 h-6">
-              <div className="absolute left-1/2 top-0 w-px h-full bg-yellow-400/60 -translate-x-1/2" />
-              <div className="absolute top-1/2 left-0 h-px w-full bg-yellow-400/60 -translate-y-1/2" />
-              <div className="absolute left-1/2 top-1/2 w-2 h-2 border border-yellow-400/80 rounded-full -translate-x-1/2 -translate-y-1/2" />
+              <div className="absolute left-1/2 top-0 w-px h-full bg-accent-cyan/60 -translate-x-1/2" />
+              <div className="absolute top-1/2 left-0 h-px w-full bg-accent-cyan/60 -translate-y-1/2" />
+              <div className="absolute left-1/2 top-1/2 w-1.5 h-1.5 border border-accent-cyan rounded-full -translate-x-1/2 -translate-y-1/2" />
             </div>
           </div>
 
           {/* tip bar */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-            <div className="px-6 py-2.5 rounded-full bg-black/50 border border-yellow-400/20
-                            text-yellow-200 text-sm backdrop-blur-md tracking-wide transition-all duration-500">
+            <div className="px-6 py-3 rounded-full bg-white/5 border border-white/10 glass-card
+                            text-white text-sm font-sans font-medium backdrop-blur-xl tracking-wide transition-all duration-500 shadow-lg">
               {tip}
             </div>
           </div>
 
           {/* ESC hint (top right) */}
           <div className="absolute top-6 right-6 z-30 pointer-events-none">
-            <div className="flex items-center gap-2 px-4 py-2 bg-black/50 border border-stone-700/40
-                            rounded-lg text-xs text-stone-400 backdrop-blur-sm">
-              <kbd className="px-1.5 py-0.5 bg-stone-800 border border-stone-600 rounded text-yellow-400 font-mono">ESC</kbd>
-              <span>Exit Explore Mode</span>
+            <div className="flex items-center gap-3 px-5 py-2.5 bg-white/5 border border-white/10
+                            rounded-xl text-xs text-on-surface-variant backdrop-blur-xl glass-card font-sans shadow-lg">
+              <kbd className="px-2 py-1 bg-white/10 border border-white/10 rounded text-accent-cyan font-mono font-bold">ESC</kbd>
+              <span className="uppercase tracking-widest font-bold text-[10px]">Exit Explore</span>
             </div>
           </div>
 
           {/* compass / help toggle */}
           <div className="absolute top-6 left-6 z-30">
             <button
-              className="pointer-events-auto flex items-center gap-2 px-4 py-2 bg-black/50 border
-                         border-stone-700/40 rounded-lg text-xs text-stone-400 backdrop-blur-sm hover:border-yellow-500/40 transition-colors cursor-pointer"
+              className="pointer-events-auto flex items-center gap-2 px-5 py-2.5 bg-white/5 border
+                         border-white/10 rounded-xl text-xs font-bold uppercase tracking-widest text-on-surface-variant backdrop-blur-xl glass-card hover:bg-white/10 hover:text-white transition-all cursor-pointer shadow-lg"
               onClick={() => setShowHelp(h => !h)}
             >
-              <span className="text-yellow-400">?</span> Controls
+              <span className="material-symbols-outlined text-[16px] text-primary">help</span>
+              Controls
             </button>
             {showHelp && (
-              <div className="mt-2 grid grid-cols-1 gap-1 text-xs text-stone-400 border border-stone-700/50
-                              bg-black/70 rounded-xl px-5 py-4 backdrop-blur-md">
+              <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-on-surface-variant border border-white/10
+                              bg-white/5 rounded-[1.2rem] px-6 py-5 backdrop-blur-xl glass-card shadow-xl">
                 {[['W/S','Forward/Back'],['A/D','Left/Right'],['Q/E','Up/Down'],['F','Fullscreen']].map(([k,d])=>(
-                  <div key={k} className="flex items-center gap-2">
-                    <kbd className="px-1.5 py-0.5 bg-stone-800 border border-stone-600 rounded text-yellow-400 font-mono">{k}</kbd>
-                    <span>{d}</span>
+                  <div key={k} className="flex items-center gap-3">
+                    <kbd className="px-2 py-1 bg-white/10 border border-white/10 rounded text-accent-cyan font-mono font-bold text-[10px]">{k}</kbd>
+                    <span className="font-sans font-medium">{d}</span>
                   </div>
                 ))}
               </div>
