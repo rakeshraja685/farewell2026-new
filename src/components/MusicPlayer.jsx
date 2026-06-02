@@ -153,143 +153,119 @@ export default function MusicPlayer() {
         {/* Expanded Player Panel */}
         {isExpanded && (
           <div
-            className="mb-3 rounded-2xl shadow-2xl p-6 w-72"
+            className="mb-3 rounded-[2rem] shadow-2xl p-6 w-72 glass-card border border-white/10 animate-slideUp overflow-hidden relative"
             style={{
-              background: "rgba(22,22,22,0.95)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(242,202,80,0.15)",
-              animation: "slideUp 0.25s ease-out",
-              boxShadow: "0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(242,202,80,0.08)",
+              background: "rgba(255,255,255,0.05)",
+              backdropFilter: "blur(24px) saturate(150%)",
             }}
           >
+            {/* Ambient animated gradient background blob inside player */}
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-[30px] pointer-events-none" />
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-accent-cyan/20 rounded-full blur-[30px] pointer-events-none" />
+
             {/* Track Info + Close */}
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-5 relative z-10">
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 {/* Animated Music Icon */}
                 <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: "linear-gradient(135deg, #f2ca50, #e8a020)" }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-primary to-accent-cyan shadow-lg"
                 >
                   <span
-                    className="material-symbols-outlined text-base"
+                    className="material-symbols-outlined text-white text-base drop-shadow-md"
                     style={{
-                      color: "#1a1a1a",
-                      animation: isPlaying ? "spin 3s linear infinite" : "none",
+                      animation: isPlaying ? "spin 4s linear infinite" : "none",
                     }}
                   >
                     album
                   </span>
                 </div>
-                <div className="min-w-0">
-                  <p
-                    className="text-sm font-semibold truncate"
-                    style={{ color: "#f5f0e8", fontFamily: "serif", fontStyle: "italic" }}
-                  >
+                <div className="min-w-0 flex flex-col justify-center">
+                  <p className="text-[15px] font-bold text-white font-display truncate tracking-tight leading-tight">
                     {tracks[currentTrack].title}
                   </p>
-                  <p
-                    className="text-[10px] uppercase tracking-widest truncate"
-                    style={{ color: "#f2ca50", opacity: 0.8 }}
-                  >
+                  <p className="text-[10px] font-sans text-on-surface-variant font-bold tracking-widest uppercase truncate mt-0.5">
                     {tracks[currentTrack].artist}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsExpanded(false)}
-                className="w-7 h-7 flex items-center justify-center rounded-full transition-colors bg-transparent border-none cursor-pointer"
-                style={{ color: "rgba(255,255,255,0.4)" }}
+                className="w-8 h-8 flex items-center justify-center rounded-full transition-colors bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer text-white/50 hover:text-white"
               >
-                <span className="material-symbols-outlined text-base">close</span>
+                <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </div>
 
             {/* Progress Bar */}
             <div
-              className="w-full rounded-full mb-1 cursor-pointer overflow-hidden"
-              style={{ height: "4px", background: "rgba(255,255,255,0.08)" }}
+              className="w-full rounded-full mb-1 cursor-pointer overflow-hidden relative z-10"
+              style={{ height: "5px", background: "rgba(255,255,255,0.1)" }}
               onClick={handleSeek}
             >
               <div
-                className="h-full rounded-full"
+                className="h-full rounded-full bg-gradient-to-r from-primary to-accent-cyan"
                 style={{
                   width: `${progress}%`,
-                  background: "linear-gradient(to right, #f2ca50, #e8a020)",
                   transition: "width 0.1s linear",
                 }}
               />
             </div>
 
             {/* Time */}
-            <div className="flex justify-between mb-5">
-              <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.35)" }}>
+            <div className="flex justify-between mb-5 relative z-10">
+              <span className="text-[10px] text-white/50 font-mono">
                 {formatTime(currentTime)}
               </span>
-              <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.35)" }}>
+              <span className="text-[10px] text-white/50 font-mono">
                 {formatTime(duration)}
               </span>
             </div>
 
             {/* Track dots indicator */}
-            <div className="flex justify-center gap-2 mb-5">
+            <div className="flex justify-center gap-2 mb-5 relative z-10">
               {tracks.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentTrack(i)}
-                  className="border-none cursor-pointer p-0 transition-all duration-300"
+                  className="border-none cursor-pointer p-0 transition-all duration-300 rounded-full"
                   style={{
                     width: i === currentTrack ? "20px" : "6px",
                     height: "6px",
-                    borderRadius: "3px",
-                    background: i === currentTrack ? "#f2ca50" : "rgba(255,255,255,0.2)",
+                    background: i === currentTrack ? "#06B6D4" : "rgba(255,255,255,0.2)",
                   }}
                 />
               ))}
             </div>
 
             {/* Controls */}
-            <div className="flex items-center justify-center gap-6 mb-5">
+            <div className="flex items-center justify-center gap-6 mb-5 relative z-10">
               <button
                 onClick={prevTrack}
-                className="bg-transparent border-none cursor-pointer transition-opacity hover:opacity-100"
-                style={{ color: "rgba(255,255,255,0.5)", opacity: 0.7 }}
+                className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/5 rounded-full cursor-pointer transition-colors text-white/70 hover:text-white"
               >
-                <span className="material-symbols-outlined">skip_previous</span>
+                <span className="material-symbols-outlined text-lg">skip_previous</span>
               </button>
 
               <button
                 onClick={togglePlay}
-                className="w-13 h-13 rounded-full flex items-center justify-center border-none cursor-pointer transition-transform hover:scale-95 active:scale-90"
-                style={{
-                  width: "52px",
-                  height: "52px",
-                  background: "linear-gradient(135deg, #f2ca50, #e8a020)",
-                  boxShadow: "0 4px 20px rgba(242,202,80,0.4)",
-                }}
+                className="w-14 h-14 rounded-full flex items-center justify-center border-none cursor-pointer transition-all hover:scale-105 active:scale-95 bg-gradient-to-br from-primary to-accent-cyan shadow-[0_4px_20px_rgba(139,92,246,0.5)]"
               >
-                <span
-                  className="material-symbols-outlined text-2xl"
-                  style={{ color: "#1a1a1a", fontSize: "26px" }}
-                >
+                <span className="material-symbols-outlined text-white text-3xl drop-shadow-md">
                   {isPlaying ? "pause" : "play_arrow"}
                 </span>
               </button>
 
               <button
                 onClick={nextTrack}
-                className="bg-transparent border-none cursor-pointer transition-opacity hover:opacity-100"
-                style={{ color: "rgba(255,255,255,0.5)", opacity: 0.7 }}
+                className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/5 rounded-full cursor-pointer transition-colors text-white/70 hover:text-white"
               >
-                <span className="material-symbols-outlined">skip_next</span>
+                <span className="material-symbols-outlined text-lg">skip_next</span>
               </button>
             </div>
 
             {/* Volume */}
-            <div className="flex items-center gap-3">
-              <span
-                className="material-symbols-outlined"
-                style={{ color: "rgba(255,255,255,0.35)", fontSize: "16px" }}
-              >
+            <div className="flex items-center gap-3 relative z-10">
+              <span className="material-symbols-outlined text-white/40 text-base">
                 volume_down
               </span>
               <input
@@ -305,29 +281,19 @@ export default function MusicPlayer() {
                   borderRadius: "4px",
                   outline: "none",
                   border: "none",
-                  accentColor: "#f2ca50",
-                  background: `linear-gradient(to right, #f2ca50 0%, #f2ca50 ${volume * 100}%, rgba(255,255,255,0.1) ${volume * 100}%, rgba(255,255,255,0.1) 100%)`,
+                  accentColor: "#06B6D4",
+                  background: `linear-gradient(to right, #06B6D4 0%, #06B6D4 ${volume * 100}%, rgba(255,255,255,0.1) ${volume * 100}%, rgba(255,255,255,0.1) 100%)`,
                 }}
               />
-              <span
-                className="material-symbols-outlined"
-                style={{ color: "rgba(255,255,255,0.35)", fontSize: "16px" }}
-              >
+              <span className="material-symbols-outlined text-white/40 text-base">
                 volume_up
               </span>
             </div>
 
             {/* Loop badge */}
-            <div className="flex justify-center mt-4">
-              <span
-                className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] uppercase tracking-widest"
-                style={{
-                  background: "rgba(242,202,80,0.1)",
-                  color: "#f2ca50",
-                  border: "1px solid rgba(242,202,80,0.2)",
-                }}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: "12px" }}>
+            <div className="flex justify-center mt-5 relative z-10">
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-primary/10 text-primary border border-primary/20">
+                <span className="material-symbols-outlined text-[13px]">
                   repeat
                 </span>
                 Looping Playlist
@@ -339,29 +305,31 @@ export default function MusicPlayer() {
         {/* Floating Pill Button */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center gap-3 rounded-full px-5 py-3 border-none cursor-pointer transition-all duration-300 group relative"
+          className="flex items-center gap-3 rounded-full px-5 py-3.5 border-none cursor-pointer transition-all duration-300 group relative glass-card"
           style={{
-            background: "rgba(22,22,22,0.92)",
-            backdropFilter: "blur(20px)",
+            background: "rgba(255,255,255,0.05)",
+            backdropFilter: "blur(20px) saturate(150%)",
             border: isPlaying
-              ? "1px solid rgba(242,202,80,0.5)"
-              : "1px solid rgba(255,255,255,0.08)",
+              ? "1px solid rgba(6,182,212,0.5)"
+              : "1px solid rgba(255,255,255,0.1)",
             boxShadow: isPlaying
-              ? "0 4px 24px rgba(242,202,80,0.2), 0 2px 8px rgba(0,0,0,0.6)"
-              : "0 2px 16px rgba(0,0,0,0.6)",
+              ? "0 4px 24px rgba(6,182,212,0.3), 0 2px 10px rgba(0,0,0,0.5)"
+              : "0 4px 16px rgba(0,0,0,0.5)",
           }}
         >
           {/* Pulsing ring hint when autoplay is blocked */}
           {autoplayBlocked && (
             <span
               className="absolute inset-0 rounded-full"
-              style={{ animation: "ringPulse 1.8s ease-out infinite", border: "2px solid rgba(242,202,80,0.6)" }}
+              style={{ animation: "ringPulse 2s ease-out infinite", border: "2px solid rgba(139,92,246,0.6)" }}
             />
           )}
           <span
             className="material-symbols-outlined text-xl"
             style={{
-              color: "#f2ca50",
+              background: "linear-gradient(to right, #8B5CF6, #06B6D4)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
               animation: isPlaying ? "pulse 1.5s ease-in-out infinite" : "none",
             }}
           >
@@ -369,8 +337,8 @@ export default function MusicPlayer() {
           </span>
           {!isExpanded && (
             <span
-              className="text-xs hidden sm:inline transition-colors"
-              style={{ color: "rgba(255,255,255,0.6)", fontFamily: "sans-serif" }}
+              className="text-xs hidden sm:inline transition-colors font-body font-medium"
+              style={{ color: "rgba(255,255,255,0.8)" }}
             >
               {autoplayBlocked ? "Tap anywhere to play 🎵" : tracks[currentTrack].title}
             </span>
