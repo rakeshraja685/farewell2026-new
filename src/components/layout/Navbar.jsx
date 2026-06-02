@@ -33,7 +33,7 @@ export default function Navbar() {
       >
         <div 
           className={`flex justify-between items-center px-6 transition-all duration-500 w-[90%] max-w-5xl rounded-full glass-card border border-white/10 shadow-2xl ${
-            scrolled ? "py-3 bg-surface-container-high/80" : "py-4 bg-surface/50"
+            scrolled ? "py-3 bg-black/10" : "py-4 bg-transparent"
           }`}
         >
           {/* Logo */}
