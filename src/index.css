@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@theme {
+  --color-background: #0B0F19;
+  --color-surface: rgba(255, 255, 255, 0.03);
+  --color-surface-container: rgba(255, 255, 255, 0.05);
+  --color-surface-container-low: rgba(255, 255, 255, 0.02);
+  --color-surface-container-high: rgba(255, 255, 255, 0.08);
+  --color-surface-container-lowest: #060913;
+  --color-surface-container-highest: rgba(255, 255, 255, 0.12);
+  --color-on-surface: #F8FAFC;
+  --color-on-surface-variant: #94A3B8;
+  --color-primary: #8B5CF6;
+  --color-primary-container: #6D28D9;
+  --color-on-primary: #FFFFFF;
+  --color-accent-rose: #F43F5E;
+  --color-accent-cyan: #06B6D4;
+  --color-accent-amber: #F59E0B;
+  --color-outline-variant: rgba(255, 255, 255, 0.1);
+}
+
 @layer utilities {
   .text-gradient {
     background: linear-gradient(135deg, var(--tw-gradient-from, #8B5CF6), var(--tw-gradient-via, #F43F5E), var(--tw-gradient-to, #06B6D4));
