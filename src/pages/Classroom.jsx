@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
@@ -10,6 +11,7 @@ import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 
 export default function Classroom() {
+  const navigate = useNavigate();
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -347,7 +349,7 @@ export default function Classroom() {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-      composer.setSize(w, h);
+      if (composer) composer.setSize(w, h);
     };
     window.addEventListener('resize', onResize);
 
@@ -559,6 +561,21 @@ export default function Classroom() {
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
     >
+
+      {/* ── Back button (always visible) ─────────────────────────────── */}
+      <button
+        onClick={() => navigate('/')}
+        className="absolute top-5 left-5 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl
+                   bg-white/5 border border-white/10 backdrop-blur-xl
+                   text-on-surface-variant text-xs font-bold uppercase tracking-widest font-sans
+                   hover:bg-white/10 hover:border-primary/40 hover:text-white
+                   transition-all duration-300 cursor-pointer pointer-events-auto glass-card shadow-lg"
+      >
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current" aria-hidden="true">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        Back
+      </button>
 
       {/* ── Canvas mount ─────────────────────────────────────────────────── */}
       <div

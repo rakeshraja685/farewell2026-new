@@ -69,7 +69,17 @@ function App() {
           element={isAuth ? <Navigate to="/" replace /> : <Login />}
         />
 
-        {/* Private: everything else */}
+        {/* Private: Classroom is full-screen immersive, no layout wrapper */}
+        <Route
+          path="/classroom"
+          element={
+            <PrivateRoute>
+              <Classroom />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Private: everything else inside Layout */}
         <Route
           path="/"
           element={
@@ -81,7 +91,6 @@ function App() {
           <Route index element={<LandingPage />} />
           <Route path="gallery" element={<Gallery />} />
           <Route path="yearbook" element={<ClassYearbook />} />
-          <Route path="classroom" element={<Classroom />} />
           <Route path="messages" element={<FarewellMessages />} />
           <Route path="videos" element={<Videos />} />
         </Route>

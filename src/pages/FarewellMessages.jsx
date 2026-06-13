@@ -17,7 +17,7 @@ export default function FarewellMessages() {
 
   useEffect(() => {
     // Listen to messages from Firestore in real-time
-    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "farewell_messages"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const msgs = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -65,7 +65,7 @@ export default function FarewellMessages() {
     // 4. Send the real +1 or -1 to Firebase
     if (typeof id === 'string' && id.length > 10) {
       try {
-        const msgRef = doc(db, "messages", id);
+        const msgRef = doc(db, "farewell_messages", id);
         await updateDoc(msgRef, { likes: increment(isLiked ? -1 : 1) });
       } catch (error) {
         console.error("Error updating likes:", error);
@@ -103,7 +103,7 @@ export default function FarewellMessages() {
     
     try {
       // Save message to Firebase Database
-      await addDoc(collection(db, "messages"), newMsg);
+      await addDoc(collection(db, "farewell_messages"), newMsg);
       setFormData({ name: "", message: "", anonymous: false });
       setShowToast(true);
     } catch (error) {
