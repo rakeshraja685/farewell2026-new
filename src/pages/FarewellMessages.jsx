@@ -11,6 +11,7 @@ export default function FarewellMessages() {
   });
   const [animatingHeart, setAnimatingHeart] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const [formData, setFormData] = useState({ name: "", message: "", anonymous: false });
   // Track which message IDs have a pending like update in-flight
   const [pendingLikes, setPendingLikes] = useState(new Set());
@@ -88,7 +89,11 @@ export default function FarewellMessages() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.message.trim()) return;
+    if (!formData.message.trim()) {
+      setToastMessage("Please enter your farewell message! 💖");
+      setShowToast(true);
+      return;
+    }
     
     const newMsg = {
       name: formData.anonymous ? "Anonymous" : (formData.name || "Anonymous"),
@@ -105,6 +110,7 @@ export default function FarewellMessages() {
       // Save message to Firebase Database
       await addDoc(collection(db, "farewell_messages"), newMsg);
       setFormData({ name: "", message: "", anonymous: false });
+      setToastMessage("Your legacy has been preserved ✨");
       setShowToast(true);
     } catch (error) {
       console.error("Error adding message: ", error);
@@ -267,7 +273,7 @@ export default function FarewellMessages() {
         </aside>
       </div>
 
-      <Toast message="Your legacy has been preserved ✨" isVisible={showToast} onClose={hideToast} />
+      <Toast message={toastMessage} isVisible={showToast} onClose={hideToast} />
     </div>
   );
 }
