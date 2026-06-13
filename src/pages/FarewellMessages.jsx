@@ -89,6 +89,11 @@ export default function FarewellMessages() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.name.trim() && !formData.anonymous) {
+      setToastMessage("Please enter your name or post as anonymous! 👤");
+      setShowToast(true);
+      return;
+    }
     if (!formData.message.trim()) {
       setToastMessage("Please enter your farewell message! 💖");
       setShowToast(true);
