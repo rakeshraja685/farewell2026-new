@@ -13,31 +13,57 @@ function VideoModal({ video, onClose }) {
   // Use the standard iframe embed URL
   const iframeSrc = video.src;
 
+  // Default to portrait layout on mobile screens (< 768px) where most videos
+  // are portrait and need vertical space to render Google Drive controls cleanly.
+  const [isPortrait, setIsPortrait] = useState(() => {
+    return window.innerWidth < 768;
+  });
+
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/95 backdrop-blur-md">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 sm:p-8 bg-black/95 backdrop-blur-md">
       {/* Close Background Area */}
       <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
 
-      {/* Header / Close button */}
-      <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 flex justify-between items-start z-10 pointer-events-none">
-        <div className="pointer-events-auto max-w-xl">
-          <h3 className="font-serif italic text-xl sm:text-2xl text-white drop-shadow-md">
+      {/* Header / Controls */}
+      <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 flex justify-between items-start z-20 pointer-events-none">
+        <div className="pointer-events-auto max-w-[60vw] sm:max-w-xl">
+          <h3 className="font-serif italic text-lg sm:text-2xl text-white drop-shadow-md truncate">
             {video.title}
           </h3>
-          <p className="font-sans text-[11px] text-stone-300 uppercase tracking-widest mt-1">
+          <p className="font-sans text-[10px] sm:text-[11px] text-stone-300 uppercase tracking-widest mt-1">
             {video.date}
           </p>
         </div>
-        <button
-          onClick={onClose}
-          className="pointer-events-auto w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all backdrop-blur-sm cursor-pointer"
-        >
-          <span className="material-symbols-outlined text-xl">close</span>
-        </button>
+        <div className="flex gap-3 pointer-events-auto">
+          {/* Aspect Ratio Toggle */}
+          <button
+            onClick={() => setIsPortrait(!isPortrait)}
+            title={isPortrait ? "Switch to Landscape view" : "Switch to Portrait view"}
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all backdrop-blur-sm cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-xl">
+              {isPortrait ? "crop_landscape" : "crop_portrait"}
+            </span>
+          </button>
+
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all backdrop-blur-sm cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-xl">close</span>
+          </button>
+        </div>
       </div>
 
       {/* Video Element (iFrame) */}
-      <div className="relative w-full max-w-6xl aspect-video z-10 bg-[#0f0f0f] rounded-xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-white/10 flex items-center justify-center">
+      <div
+        className={`relative z-10 bg-[#0f0f0f] rounded-xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-white/10 flex items-center justify-center transition-all duration-300 ${
+          isPortrait
+            ? "w-full max-w-[420px] aspect-[9/16] max-h-[75vh]"
+            : "w-full max-w-6xl aspect-video max-h-[85vh]"
+        }`}
+      >
         <iframe
           src={iframeSrc}
           className="w-full h-full border-0"
