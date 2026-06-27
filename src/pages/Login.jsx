@@ -31,30 +31,58 @@ export default function Login() {
     "Connection established on port 5173.",
     " ",
     "SYSTEM LOCKED. Authentication required.",
+    "Type 'help' for available commands or press [ENTER] to skip boot sequence."
   ];
 
   useEffect(() => {
-    let delay = 0;
+    let isSkipped = false;
+    let timeouts = [];
+
+    const startBoot = async () => {
+      setHistory([ASCII_ART]);
+      
+      for (let i = 0; i < bootLines.length; i++) {
+        if (isSkipped) break;
+        await new Promise(resolve => {
+          const delay = Math.random() * 250 + 150;
+          const t = setTimeout(() => {
+            if (!isSkipped) setHistory(prev => [...prev, bootLines[i]]);
+            resolve();
+          }, delay);
+          timeouts.push(t);
+        });
+      }
+      
+      if (!isSkipped) {
+        const t = setTimeout(() => setBootSequence(false), 300);
+        timeouts.push(t);
+      }
+    };
+
+    startBoot();
+
+    const handleKeyDown = (e) => {
+      if ((e.key === 'Enter' || e.key === 'Escape')) {
+        isSkipped = true;
+        timeouts.forEach(clearTimeout);
+        setHistory([ASCII_ART, ...bootLines]);
+        setBootSequence(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
     
-    // First, push the ASCII art immediately
-    setHistory([ASCII_ART]);
-
-    bootLines.forEach((line, index) => {
-      delay += Math.random() * 250 + 150; // Random delay
-      setTimeout(() => {
-        setHistory((prev) => [...prev, line]);
-        if (index === bootLines.length - 1) {
-          setTimeout(() => setBootSequence(false), 300);
-        }
-      }, delay);
-    });
-
     // Enforce focus on the input whenever user clicks anywhere
     const handleClick = () => {
       if (inputRef.current) inputRef.current.focus();
     };
     window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
+    
+    return () => {
+      isSkipped = true;
+      timeouts.forEach(clearTimeout);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("click", handleClick);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,10 +97,37 @@ export default function Login() {
     e.preventDefault();
     if (!input.trim() || loading) return;
 
-    const maskedInput = "*".repeat(input.length);
-    const newHistory = [...history, `guest@farewell:~$ ${maskedInput}`];
+    const cmd = input.trim();
+    const cmdLower = cmd.toLowerCase();
     
-    if (input === CORRECT_PASSWORD) {
+    // Check if the user is typing the password, if so, mask it in history
+    const historyInput = cmd === CORRECT_PASSWORD ? "*".repeat(cmd.length) : cmd;
+    const newHistory = [...history, `guest@farewell:~$ ${historyInput}`];
+    
+    if (cmdLower === 'help') {
+      newHistory.push("AVAILABLE COMMANDS:");
+      newHistory.push("  help   - Show this help message");
+      newHistory.push("  clear  - Clear terminal history");
+      newHistory.push("  hint   - Get a hint for the password");
+      setHistory([...newHistory, " "]);
+      setInput("");
+      return;
+    }
+    
+    if (cmdLower === 'clear') {
+      setHistory([ASCII_ART]);
+      setInput("");
+      return;
+    }
+    
+    if (cmdLower === 'hint') {
+      newHistory.push("HINT: The supreme overlord's username, capitalized, followed by '@' and '123'.");
+      setHistory([...newHistory, " "]);
+      setInput("");
+      return;
+    }
+
+    if (cmd === CORRECT_PASSWORD) {
       setAccessDenied(false);
       newHistory.push(" ");
       newHistory.push("AUTHENTICATION SUCCESSFUL");
@@ -95,7 +150,7 @@ export default function Login() {
       setAccessDenied(true);
       newHistory.push(" ");
       newHistory.push("ERROR: ACCESS DENIED");
-      newHistory.push("The password entered is incorrect. Please verify your credentials and try again.");
+      newHistory.push("The credentials entered are incorrect. Try 'hint' if you are stuck.");
       newHistory.push(" ");
       setHistory(newHistory);
       setInput("");
@@ -111,7 +166,7 @@ export default function Login() {
       {/* Vintage screen glow */}
       <div className="pointer-events-none fixed inset-0 z-40 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,20,0,0.8)_100%)] mix-blend-multiply" />
       
-      <div className={`max-w-4xl w-full mx-auto relative z-10 flex flex-col justify-end ${accessDenied ? 'animate-shake' : ''}`}>
+      <div className={`max-w-4xl w-full mx-auto relative z-10 flex flex-col justify-end ${accessDenied ? 'animate-glitch' : ''}`}>
         
         {/* Terminal Text */}
         <div className="flex flex-col gap-1 pb-2 drop-shadow-[0_0_8px_rgba(0,255,65,0.6)]">
@@ -131,7 +186,7 @@ export default function Login() {
             <div className="relative flex-1 flex items-center h-6">
               <input
                 ref={inputRef}
-                type="password"
+                type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 className="w-full h-full bg-transparent border-none outline-none text-transparent caret-transparent focus:ring-0 p-0 z-20 absolute inset-0"
@@ -142,7 +197,8 @@ export default function Login() {
               
               {/* Custom Block Cursor matching actual input length */}
               <div className="flex items-center absolute inset-0 z-10 pointer-events-none">
-                <span className="tracking-[0.1em]">{"*".repeat(input.length)}</span>
+                {/* Changed to preserve spaces and show input text if any */}
+                <span className="tracking-[0.1em] whitespace-pre">{input.replace(/./g, (char) => input === CORRECT_PASSWORD ? "*" : char)}</span>
                 <span className="inline-block w-[1ch] h-[1.2em] bg-[#00FF41] animate-pulse ml-[1px]" />
               </div>
             </div>
@@ -151,13 +207,17 @@ export default function Login() {
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-          20%, 40%, 60%, 80% { transform: translateX(5px); }
+        @keyframes glitch {
+          0% { transform: translate(0); text-shadow: none; }
+          20% { transform: translate(-2px, 2px); text-shadow: -2px 0 #00e6fe, 2px 0 #ff003c; }
+          40% { transform: translate(-2px, -2px); text-shadow: 2px 0 #00e6fe, -2px 0 #ff003c; }
+          60% { transform: translate(2px, 2px); text-shadow: -2px 0 #00e6fe, 2px 0 #ff003c; }
+          80% { transform: translate(2px, -2px); text-shadow: 2px 0 #00e6fe, -2px 0 #ff003c; }
+          100% { transform: translate(0); text-shadow: none; }
         }
-        .animate-shake {
-          animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        .animate-glitch {
+          animation: glitch 0.25s cubic-bezier(.25, .46, .45, .94) both;
+          color: #ff003c;
         }
       `}} />
     </div>
